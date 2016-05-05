@@ -115,7 +115,7 @@
 								</button>
 								<div id="navMenus" class="dropdown-content" style="left: 0;">
 									<ul class="nav" id="side-menu">
-										<li><a class="aNav" href="/"><p align="center">
+										<li ng-click="loadreservation();"><a class="aNav"><p align="center">
 													<i class="fa fa fa-bookmark fa-fw menuSize"></i>
 												</p>
 												<p align="center">Reservation</p></a></li>
@@ -130,11 +130,6 @@
 													<i class="fa fa-money fa-fw menuSize"></i>
 												</p>
 												<p align="center">Billing</p></a></li>
-										<li ng-click="details();"><a class="aNav" href="#"><p
-													align="center">
-													<i class="fa fa-book fa-fw menuSize"></i>
-												</p>
-												<p align="center">Reviews</p></a></li>
 										<li ng-click="dashboard();"><a class="aNav" href="#"><p
 													align="center">
 													<i class="fa fa-bar-chart-o fa-fw menuSize"></i>
@@ -279,9 +274,6 @@
 											href="#"><i class="fa fa-calendar fa-fw"></i> Booking
 												History</a></li>
 										<li class="divider"></li>
-										<li><a href="#"><i class="fa fa-gear fa-fw"></i>
-												Settings</a></li>
-										<li class="divider"></li>
 										<li><a ng-click="logout()"><i
 												class="fa fa-sign-out fa-fw"></i> Logout</a></li>
 									</ul> <!-- /.dropdown-user --></li>
@@ -336,6 +328,11 @@
 				sessionStorage.removeItem("template");
 			}
 		}
+		
+		$scope.loadreservation=function(){
+			$scope.template = $scope.templates[0];
+			$("#navMenus").hide();
+		};
 
 		$scope.addlistings = function() {
 			$scope.template = $scope.templates[5];
