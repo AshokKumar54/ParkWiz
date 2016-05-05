@@ -65,6 +65,7 @@ app.get('/availability', routes.availability);
 app.get('/reviews', routes.reviews);
 
 app.get('/panaroma', routes.panaroma);
+app.get('/video360', routes.video360);
 app.get('/details', routes.details);
 app.get('/upload', routes.uploadimage);
 app.post('/upload', routes.upload);
@@ -253,6 +254,11 @@ app.get('/api/updatepaymenthistory/:paymentid/:name/:address/:card',function(req
 //delete payment details
 app.delete('/api/deletepaymenthistory/:paymentid',function(req,res){
 	paymentmodule.deletepaymenthistory(req, res, req.params.paymentid);
+});
+
+app.get('/getSpotAvailability',function(req,res){
+    console.log("Inside app.js /getSpotAvailability "+req.query.searchdate);
+    reservation.getSpotAvailability(req,res);
 });
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -1804,16 +1804,14 @@ function googleTranslateElementInit() {
 	angular.module('myApp').controller('addListingController', addListingController);
 	function addListingController($scope, $http) {
 			$scope.addlisting1 = function(){
+				var user_id = sessionStorage.getItem("userid");
 					$http({
 			            method: 'POST',
 			            url: '/addlistings',
-			            data: { "location": String(document.getElementById('txtLocation').value), "radio1":document.getElementById('radio-choice-1').checked ,"radio2":document.getElementById('radio-choice-2').checked,"description" : document.getElementById('description').value, "numberOfSpaces":document.getElementById('numberOfSpaces').value, "rental1" : document.getElementById('rental-radio-choice-1').checked, "rental2":document.getElementById('rental-radio-choice-2').checked, "rental3" :document.getElementById('rental-radio-choice-3').checked, "checkbox1":document.getElementById('checkbox-radio-choice-1').checked, "checkbox2" :document.getElementById('checkbox-radio-choice-2').checked, "checkbox3":document.getElementById('checkbox-radio-choice-3').checked, "checkbox4":document.getElementById('checkbox-radio-choice-4').checked, "checkbox5":document.getElementById('checkbox-radio-choice-5').checked,"checkbox6":document.getElementById('checkbox-radio-choice-6').checked,"checkbox7":document.getElementById('checkbox-radio-choice-7').checked,"checkbox8":document.getElementById('checkbox-radio-choice-8').checked,"checkbox9":document.getElementById('checkbox-radio-choice-9').checked,"checkbox10":document.getElementById('checkbox-radio-choice-10').checked,"checkbox11":document.getElementById('checkbox-radio-choice-11').checked,"checkbox12":document.getElementById('checkbox-radio-choice-12').checked, "instructions":document.getElementById('instructions').value, "image1":document.getElementById('image1').value,"image2":document.getElementById('image2').value,"image3":document.getElementById('image3').value }
+			            data: { "user_id": user_id,"location": String(document.getElementById('txtLocation').value), "radio1":document.getElementById('radio-choice-1').checked ,"radio2":document.getElementById('radio-choice-2').checked,"description" : document.getElementById('description').value, "numberOfSpaces":document.getElementById('numberOfSpaces').value, "rental1" : document.getElementById('rental-radio-choice-1').checked, "rental2":document.getElementById('rental-radio-choice-2').checked, "rental3" :document.getElementById('rental-radio-choice-3').checked, "checkbox1":document.getElementById('checkbox-radio-choice-1').checked, "checkbox2" :document.getElementById('checkbox-radio-choice-2').checked, "checkbox3":document.getElementById('checkbox-radio-choice-3').checked, "checkbox4":document.getElementById('checkbox-radio-choice-4').checked, "checkbox5":document.getElementById('checkbox-radio-choice-5').checked,"checkbox6":document.getElementById('checkbox-radio-choice-6').checked,"checkbox7":document.getElementById('checkbox-radio-choice-7').checked,"checkbox8":document.getElementById('checkbox-radio-choice-8').checked,"checkbox9":document.getElementById('checkbox-radio-choice-9').checked,"checkbox10":document.getElementById('checkbox-radio-choice-10').checked,"checkbox11":document.getElementById('checkbox-radio-choice-11').checked,"checkbox12":document.getElementById('checkbox-radio-choice-12').checked, "instructions":document.getElementById('instructions').value, "image1":document.getElementById('image1').value,"image2":document.getElementById('image2').value,"image3":document.getElementById('image3').value }
 			         }).success(function(response){
 			        	 var resp= JSON.parse(JSON.stringify(response));
-				         // document.getElementById("reviewresult").innerHTML=resp;
-				         // $('#reviewbody').hide();
 				         console.log(resp);
-				         //reviewadded=true;
 				    }).error(function(error){
 				    	document.getElementById("reviewresult").innerHTML="Adding review failed";
 			        });
@@ -1824,23 +1822,354 @@ function googleTranslateElementInit() {
 
 	angular.module('myApp').controller('addPaymentController', addPaymentController);
 	function addPaymentController($scope, $http) {
+		var user_id = sessionStorage.getItem("userid");
+		console.log(user_id);
 		$scope.addPaymentMethod = function() {
 			$http({
 	            method: 'POST',
 	            url: '/addPayment',
-	            data: { "name": document.getElementById('cardname').value, "creditcard":document.getElementById('cardnum').value ,"address":document.getElementById('address').value,"cvv" : document.getElementById('cvv').value, "month":document.getElementById('month').value, "year" : document.getElementById('year').value, "user_id": "1"}
+	            data: { "name": document.getElementById('cardname').value, "creditcard":document.getElementById('cardnum').value ,"address":document.getElementById('address').value,"cvv" : document.getElementById('cvv').value, "month":document.getElementById('month').value, "year" : document.getElementById('year').value, "user_id": user_id}
 	         }).success(function(response){
 	        	 var resp= JSON.parse(JSON.stringify(response));
-		         // document.getElementById("reviewresult").innerHTML=resp;
-		         // $('#reviewbody').hide();
 		         console.log(resp);
-		         //reviewadded=true;
+		         document.getElementById("addpayment").innerHTML=resp;
+		         $('#paymentDetails').hide();
 		    }).error(function(error){
-		    	document.getElementById("reviewresult").innerHTML="Adding review failed";
+		    	alert("Server Error. Try again later");
 	        });
 		}
 	}
 
 
+</script>
+<script>
+	angular.module('myApp')
+			.controller('availabilitymodule', availabilitymodule);
+	function availabilitymodule($scope, $http) {
+		spotid = sessionStorage.getItem("spot_id");
+		var timeslot1 = [ {
+			'time' : '12:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '1:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '2:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '3:00',
+			'bgcolor' : ''
+		} ];
+		var timeslot2 = [ {
+			'time' : '4:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '5:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '6:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '7:00',
+			'bgcolor' : ''
+		} ];
+		var timeslot3 = [ {
+			'time' : '8:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '9:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '10:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '11:00',
+			'bgcolor' : ''
+		} ];
+		var timeslot4 = [ {
+			'time' : '12:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '13:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '14:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '15:00',
+			'bgcolor' : ''
+		} ];
+		var timeslot5 = [ {
+			'time' : '16:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '17:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '18:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '19:00',
+			'bgcolor' : ''
+		} ];
+		var timeslot6 = [ {
+			'time' : '20:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '21:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '22:00',
+			'bgcolor' : ''
+		}, {
+			'time' : '23:00',
+			'bgcolor' : ''
+		} ];
+		
+		$scope.searchdate = [];
+		$scope.init = function() {
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+			if (dd < 10) {
+				dd = '0' + dd
+			}
+			if (mm < 10) {
+				mm = '0' + mm
+			}
+			today = dd + '-' + mm + '-' + yyyy;
+			searchdate = yyyy + '-' + mm + '-' + dd;
+			;
+			//var searchdate=document.getElementById('searchAvailabilityDate').value;
+			$http(
+					{
+						method : 'GET',
+						url : '/getSpotAvailability?spotid=' + spotid
+								+ '&searchdate=' + searchdate
+					}).success(
+					function(response) {
+						var timeslots1 = timeslot1.slice(0);
+						var timeslots2 = timeslot2.slice(0);
+						var timeslots3 = timeslot3.slice(0);
+						var timeslots4 = timeslot4.slice(0);
+						var timeslots5 = timeslot5.slice(0);
+						var timeslots6 = timeslot6.slice(0);
+
+						
+						for(var a=0; a<4; a++){
+							timeslots1[a].bgcolor = "";
+							timeslots2[a].bgcolor = "";
+							timeslots3[a].bgcolor = "";
+							timeslots4[a].bgcolor = "";
+							timeslots5[a].bgcolor = "";
+							timeslots6[a].bgcolor = "";
+						}
+						
+						var res = JSON.parse(JSON.stringify(response));
+						var splits = [];
+						if (res) {
+							var time = [];
+							for(var k =0; k<res.length; k++){
+								time.push.apply(time,splitTimeByMinutes(res[k].starttime,res[k].endtime, 60));
+							}
+
+							for (var j = 0; j < time.length; j++) {
+								var number = time[j].toString().split(':')[0];
+								if(number>=0 && number <=3){
+									for (var i=0; i<timeslots1.length; i++) {
+										  if ((timeslots1[i].time).toString().split(':')[0] == number) {
+											  timeslots1[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=4 && number <=7){
+									for (var i=0; i<timeslots2.length; i++) {
+										if ((timeslots2[i].time).toString().split(':')[0] == number) {
+											  timeslots2[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=8 && number <=11){
+									for (var i=0; i<timeslots3.length; i++) {
+										if ((timeslots3[i].time).toString().split(':')[0] == number) {
+											  timeslots3[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=12 && number <=15){
+									for (var i=0; i<timeslots4.length; i++) {
+										if ((timeslots4[i].time).toString().split(':')[0] == number) {
+											  timeslots4[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=16 && number <=19){
+									for (var i=0; i<timeslots5.length; i++) {
+										if ((timeslots5[i].time).toString().split(':')[0] == number) {
+											  timeslots5[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=20 && number <=23){
+									for (var i=0; i<timeslots6.length; i++) {
+										if ((timeslots6[i].time).toString().split(':')[0] == number) {
+											  timeslots6[i].bgcolor = "green";
+										  }
+									}
+								}
+							}
+						}
+						
+						$scope.timesplits1 = [];
+						$scope.timesplits1 = JSON.parse(JSON.stringify(timeslots1));
+						
+						$scope.timesplits2 = [];
+						$scope.timesplits2 = JSON.parse(JSON.stringify(timeslots2));
+						
+						$scope.timesplits3 = [];
+						$scope.timesplits3 = JSON.parse(JSON.stringify(timeslots3));
+						
+						$scope.timesplits4 = [];
+						$scope.timesplits4 = JSON.parse(JSON.stringify(timeslots4));
+						
+						$scope.timesplits5 = [];
+						$scope.timesplits5 = JSON.parse(JSON.stringify(timeslots5));
+						
+						$scope.timesplits6 = [];
+						$scope.timesplits6 = JSON.parse(JSON.stringify(timeslots6));
+						
+					}).error(function(error) {
+				alert(error);
+			});
+		};
+		
+		$scope.searchAvailableSlots = function() {
+			
+			var searchdate=document.getElementById('searchAvailabilityDate').value;
+			$http(
+					{
+						method : 'GET',
+						url : '/getSpotAvailability?spotid=' + spotid
+								+ '&searchdate=' + searchdate
+					}).success(
+					function(response) {
+						$('.bgclass').css('background-color','#fff');
+						
+						var timeslots1 = timeslot1.slice(0);
+						var timeslots2 = timeslot2.slice(0);
+						var timeslots3 = timeslot3.slice(0);
+						var timeslots4 = timeslot4.slice(0);
+						var timeslots5 = timeslot5.slice(0);
+						var timeslots6 = timeslot6.slice(0);
+
+						for(var a=0; a<4; a++){
+							timeslots1[a].bgcolor = '';
+							timeslots2[a].bgcolor = '';
+							timeslots3[a].bgcolor = '';
+							timeslots4[a].bgcolor = '';
+							timeslots5[a].bgcolor = '';
+							timeslots6[a].bgcolor = '';
+						}
+						
+						var res = JSON.parse(JSON.stringify(response));
+						var splits = [];
+						if (res) {
+							var time = [];
+							for(var k =0; k<res.length; k++){
+								time.push.apply(time,splitTimeByMinutes(res[k].starttime,res[k].endtime, 60));
+							}
+
+							for (var j = 0; j < time.length; j++) {
+								var number = time[j].toString().split(':')[0];
+								if(number >=0 && number <=3){
+									for (var i=0; i<timeslots1.length; i++) {
+										  if ((timeslots1[i].time).toString().split(':')[0] == number) {
+											  timeslots1[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=4 && number <=7){
+									for (var i=0; i<timeslots2.length; i++) {
+										if ((timeslots2[i].time).toString().split(':')[0] == number) {
+											  timeslots2[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=8 && number <=11){
+									for (var i=0; i<timeslots3.length; i++) {
+										if ((timeslots3[i].time).toString().split(':')[0] == number) {
+											  timeslots3[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=12 && number <=15){
+									for (var i=0; i<timeslots4.length; i++) {
+										if ((timeslots4[i].time).toString().split(':')[0] == number) {
+											  timeslots4[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=16 && number <=19){
+									for (var i=0; i<timeslots5.length; i++) {
+										if ((timeslots5[i].time).toString().split(':')[0] == number) {
+											  timeslots5[i].bgcolor = "green";
+										  }
+									}
+								}else if(number >=20 && number <=23){
+									for (var i=0; i<timeslots6.length; i++) {
+										if ((timeslots6[i].time).toString().split(':')[0] == number) {
+											  timeslots6[i].bgcolor = "green";
+										  }
+									}
+								}
+							}
+						}
+						
+						$scope.timesplits1 = JSON.parse(JSON.stringify(timeslots1));
+						
+						$scope.timesplits2 = [];
+						$scope.timesplits2 = JSON.parse(JSON.stringify(timeslots2));
+						
+						$scope.timesplits3 = [];
+						$scope.timesplits3 = JSON.parse(JSON.stringify(timeslots3));
+						
+						$scope.timesplits4 = [];
+						$scope.timesplits4 = JSON.parse(JSON.stringify(timeslots4));
+						
+						$scope.timesplits5 = [];
+						$scope.timesplits5 = JSON.parse(JSON.stringify(timeslots5));
+						
+						$scope.timesplits6 = [];
+						$scope.timesplits6 = JSON.parse(JSON.stringify(timeslots6));
+						
+					}).error(function(error) {
+				alert(error);
+			});
+		};
+	}
+</script>
+<script>
+	function splitTimeByMinutes(startTime, endTime, increment){
+		    startTime = startTime.toString().split(':');
+		    endTime = endTime.toString().split(':');
+		    increment = parseInt(increment, 10);
+
+		    var pad = function (n) { return (n < 10) ? '0' + n.toString() : n; },
+		        startHr = parseInt(startTime[0], 10),
+		        startMin = parseInt(startTime[1], 10),
+		        endHr = parseInt(endTime[0], 10),
+		        endMin = parseInt(endTime[1], 10),
+		        currentHr = startHr,
+		        currentMin = startMin,
+		        previous = currentHr + ':' + pad(currentMin),
+		        current = '',
+		        r = [];
+
+		    do {
+		        currentMin += increment;
+		        if ((currentMin % 60) === 0 || currentMin > 60) {
+		            currentMin = (currentMin === 60) ? 0 : currentMin - 60;
+		            currentHr += 1;
+		        }
+		        current = currentHr + ':' + pad(currentMin);
+		        //r.push(previous + ' - ' + current);
+		        r.push(previous);
+		        previous = current;
+		  } while (currentHr !== endHr);
+			//alert(r);
+		    return r;
+	}
 </script>
 </html>
