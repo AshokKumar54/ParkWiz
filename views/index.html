@@ -1830,73 +1830,6 @@ function validatePaymentInfo(userid, spotid) {
 	angular.module('myApp').controller('addListingController',
 			addListingController);
 	function addListingController($scope, $http) {
-		$scope.addlisting1 = function() {
-			var user_id = sessionStorage.getItem("userid");
-			$http(
-					{
-						method : 'POST',
-						url : '/addlistings',
-						data : {
-							"user_id" : user_id,
-							"location" : String(document
-									.getElementById('txtLocation').value),
-							"radio1" : document
-									.getElementById('radio-choice-1').checked,
-							"radio2" : document
-									.getElementById('radio-choice-2').checked,
-							"description" : document
-									.getElementById('description').value,
-							"numberOfSpaces" : document
-									.getElementById('numberOfSpaces').value,
-							"rental1" : document
-									.getElementById('rental-radio-choice-1').checked,
-							"rental2" : document
-									.getElementById('rental-radio-choice-2').checked,
-							"rental3" : document
-									.getElementById('rental-radio-choice-3').checked,
-							"checkbox1" : document
-									.getElementById('checkbox-radio-choice-1').checked,
-							"checkbox2" : document
-									.getElementById('checkbox-radio-choice-2').checked,
-							"checkbox3" : document
-									.getElementById('checkbox-radio-choice-3').checked,
-							"checkbox4" : document
-									.getElementById('checkbox-radio-choice-4').checked,
-							"checkbox5" : document
-									.getElementById('checkbox-radio-choice-5').checked,
-							"checkbox6" : document
-									.getElementById('checkbox-radio-choice-6').checked,
-							"checkbox7" : document
-									.getElementById('checkbox-radio-choice-7').checked,
-							"checkbox8" : document
-									.getElementById('checkbox-radio-choice-8').checked,
-							"checkbox9" : document
-									.getElementById('checkbox-radio-choice-9').checked,
-							"checkbox10" : document
-									.getElementById('checkbox-radio-choice-10').checked,
-							"checkbox11" : document
-									.getElementById('checkbox-radio-choice-11').checked,
-							"checkbox12" : document
-									.getElementById('checkbox-radio-choice-12').checked,
-							"instructions" : document
-									.getElementById('instructions').value,
-							"image1" : document.getElementById('image1').value,
-							"image2" : document.getElementById('image2').value,
-							"image3" : document.getElementById('image3').value
-						}
-					})
-					.success(function(response) {
-						var resp = JSON.parse(JSON.stringify(response));
-						// document.getElementById("reviewresult").innerHTML=resp;
-						// $('#reviewbody').hide();
-						console.log(resp);
-						//reviewadded=true;
-					})
-					.error(
-							function(error) {
-								document.getElementById("reviewresult").innerHTML = "Adding review failed";
-							});
-=======
 			$scope.addlisting1 = function(){
 				var user_id = sessionStorage.getItem("userid");
 					$http({
@@ -1921,38 +1854,13 @@ function validatePaymentInfo(userid, spotid) {
 		console.log(user_id);
 		$scope.addPaymentMethod = function() {
 			$http({
-				method : 'POST',
-				url : '/addPayment',
-				data : {
-					"name" : document.getElementById('cardname').value,
-					"creditcard" : document.getElementById('cardnum').value,
-					"address" : document.getElementById('address').value,
-					"cvv" : document.getElementById('cvv').value,
-					"month" : document.getElementById('month').value,
-					"year" : document.getElementById('year').value,
-					"user_id" : user_id
-				}
-			})
-					.success(function(response) {
-						var resp = JSON.parse(JSON.stringify(response));
-						// document.getElementById("reviewresult").innerHTML=resp;
-						// $('#reviewbody').hide();
-						console.log(resp);
-						//reviewadded=true;
-					})
-					.error(
-							function(error) {
-								document.getElementById("reviewresult").innerHTML = "Adding review failed";
-							});
-=======
 	            method: 'POST',
 	            url: '/addPayment',
 	            data: { "name": document.getElementById('cardname').value, "creditcard":document.getElementById('cardnum').value ,"address":document.getElementById('address').value,"cvv" : document.getElementById('cvv').value, "month":document.getElementById('month').value, "year" : document.getElementById('year').value, "user_id": user_id}
 	         }).success(function(response){
 	        	 var resp= JSON.parse(JSON.stringify(response));
 		         console.log(resp);
-		         document.getElementById("addpayment").innerHTML=resp;
-		         $('#paymentDetails').hide();
+		         alert(resp);
 		    }).error(function(error){
 		    	alert("Server Error. Try again later");
 	        });
