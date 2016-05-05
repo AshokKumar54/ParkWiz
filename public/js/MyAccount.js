@@ -1,10 +1,10 @@
 function MyAccountService($http) {
 	return {
 		get : function() {
-			return $http.get('/api/loggedin_userinfo');
+			return $http.get('/api/loggedin_userinfo?userid=' + sessionStorage.getItem("userid"));//?userid=' + sessionStorage.getItem("userid"));
 		},
 		create : function(MyAccountData) {
-			return $http.post('/api/loggedin_userinfo', MyAccountData);
+			return $http.post('/api/loggedin_userinfo?userid='  + sessionStorage.getItem("userid"), MyAccountData);
 		},
 		delete : function(id) {
 			return $http.delete('/api/todos/' + id);
