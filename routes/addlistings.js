@@ -3,7 +3,7 @@ exports.addlistings = function(req, res){
 	//Hashing the entered password to store in the DB
 	console.log(req.body);
 	var insertReview = "insert into listing (user_id,location,parking,garage,description,noofspaces,daily,weekly,monthly,twentyfoursever,shelteredParking,securitygates,arrangedtransfer,allocatedGates,carwash,cctv,securityLighting,securityGuards,securityKey,undergroundPArking,restrooms,instructions) values ('"
-				    + "1"
+				    + req.param("user_id")
 					+ "','"
 				    + req.param("location")
 					+ "','"
