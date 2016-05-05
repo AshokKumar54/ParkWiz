@@ -824,7 +824,7 @@ function googleTranslateElementInit() {
 <script>
 	angular.module('myApp').controller('reviewController', reviewController);
 	function reviewController($scope, $http, $location) {
-		var spotid = 2;
+		var spotid = sessionStorage.getItem("spot_id");
 		var reviewadded = false;
 
 		$scope.init = function() {
@@ -843,7 +843,8 @@ function googleTranslateElementInit() {
 					data : {
 						"spotid" : spotid,
 						"review" : $scope.newReview,
-						"rating" : $scope.newRating
+						"rating" : $scope.newRating,
+						"userid" : sessionStorage.getItem("userid");
 					}
 				})
 						.success(
@@ -960,7 +961,7 @@ function googleTranslateElementInit() {
 	angular.module('myApp').controller('availabilityController',
 			availabilityController);
 	function availabilityController($scope, $http, $location) {
-		var spotid = 2;
+		var spotid = sessionStorage.getItem("spot_id");
 		var count1 = 0, count2 = 0, count3 = 0, count4 = 0
 		count5 = 0, count6 = 0, count7 = 0;
 
