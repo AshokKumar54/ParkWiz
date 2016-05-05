@@ -44,7 +44,7 @@ exports.checksignin = function(req, res){
 						else{
 							req.session.userid = tempuserid;
 							console.log("Login Success");
-							res.send({"login":"Success"});
+							res.send({"results":tempuserid,"login":"Success"});
 						}
 					}, updateCount);
 					
