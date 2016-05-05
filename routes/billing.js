@@ -28,7 +28,7 @@ exports.addPayment = function(req, res){
 					res.send({"payment":"Payment not added"});
 				}
 				else{
-					res.send("Card Added Added Successfully!!!");
+					res.send("Payment Details Added Successfully!!!");
 				}
 			}, insertReview);
 };
