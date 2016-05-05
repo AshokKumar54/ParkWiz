@@ -19,6 +19,7 @@ var express = require('express')
   , image = require('./routes/image')
   , billing=require('./routes/billing')
   , dashboard=require('./routes/dashboard')
+  , paymentmodule=require('./routes/payment')
   , listing=require('./routes/listing')
   , path = require('path');
 
@@ -233,6 +234,21 @@ app.get('/api/getpriorityspots',function(req,res){
 //get user listings
 app.get('/api/getuserlisting/:limit/:offset',function(req,res){
     listing.getuserlisting(req, res, req.session.userid, req.params.limit, req.params.offset);
+});
+
+//get payment history
+app.get('/api/getpaymenthistory',function(req,res){
+	paymentmodule.getpaymenthistory(req, res, req.session.userid);
+});
+
+//update payment details
+app.get('/api/updatepaymenthistory/:paymentid/:name/:address/:card',function(req,res){
+	paymentmodule.updatepaymenthistory(req, res, req.params.paymentid, req.params.name, req.params.address, req.params.card);
+});
+
+//delete payment details
+app.delete('/api/deletepaymenthistory/:paymentid',function(req,res){
+	paymentmodule.deletepaymenthistory(req, res, req.params.paymentid);
 });
 
 http.createServer(app).listen(app.get('port'), function(){

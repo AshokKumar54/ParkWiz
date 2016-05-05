@@ -1752,5 +1752,52 @@ function googleTranslateElementInit() {
         };
 	}
 </script>
+<script>
+	angular.module('myApp').controller('modulepayment', modulepayment);
+	function modulepayment($scope, $http) {
+		// calling get user listing
+		$http({
+			method : 'GET',
+			url : '/api/getpaymenthistory',
+			dataType : "json"
+		}).success(function(response) {
+			$scope.paymentinfo = response;
+		}).error(function(error) {
+			alert(error);
+		});
+
+		$scope.updatepayment = function(event) {
+			var id = event.target.id.split('-');
+			$http({
+				method : 'GET',
+				url : '/api/updatepaymenthistory/' + id[1] + '/' + $("#txtname").val() + '/' + $("#txtpaymentaddress").val() + '/' + $("#txtcardnumber").val(),
+				dataType : "json"
+			}).success(function(response) {
+				alert("Payment details updated successfully.");
+			}).error(function(error) {
+				alert(error);
+			});
+		}
+
+		$scope.deletepayment = function(event) {
+			var r = confirm("Are you sure you want to delete the payment details?");
+			if(r == true){
+				var id = event.target.id.split('-');
+				$http({
+					method : 'DELETE',
+					url : '/api/deletepaymenthistory/' + id[1],
+					dataType : "json"
+				}).success(function(response) {
+					alert("Payment details deleted successfully.");
+					var z = event.target.parentElement.parentElement.parentElement.parentElement;
+					z.parentElement.outerHTML = ""
+					
+				}).error(function(error) {
+					alert(error);
+				});
+			}
+		}
+	}
+</script>
 
 </html>
