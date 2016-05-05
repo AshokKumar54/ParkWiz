@@ -251,6 +251,11 @@ app.delete('/api/deletepaymenthistory/:paymentid',function(req,res){
 	paymentmodule.deletepaymenthistory(req, res, req.params.paymentid);
 });
 
+app.get('/getSpotAvailability',function(req,res){
+    console.log("Inside app.js /getSpotAvailability "+req.query.searchdate);
+    reservation.getSpotAvailability(req,res);
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
