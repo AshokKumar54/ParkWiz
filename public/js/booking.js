@@ -111,14 +111,20 @@ function BookingService($http) {
 			var percomplete =0;
 			if(data[0].rcount >0){
 				percomplete +=1;
+				$("#rcount").attr('class', 'check');
+				$("#rcounti").attr('class', 'fa fa-check');
 			} 
 			if(data[0].pcount > 0){
 				percomplete +=1;
+				$("#pcount").attr('class', 'check');
+				$("#pcounti").attr('class', 'fa fa-check');
 			}
 			if(data[0].icount > 0){
 				percomplete +=1;
+				$("#icount").attr('class', 'check');
+				$("#icounti").attr('class', 'fa fa-check');
 			}
-			debugger;
+			
 			$scope.percentage = Math.round((percomplete*100)/3);
 		});
 	}
@@ -129,4 +135,9 @@ function getAllBookings($scope, service){
 		.success(function(data) {
 			$scope.allbookings = data;
 		});
+
+	$scope.getDetails = function(ele ) {
+		
+		ele.$parent.detail(ele.booking.spotid);
+	}
 }

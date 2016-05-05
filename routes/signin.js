@@ -1,7 +1,9 @@
 var password = require('password-hash-and-salt');
 var mysql = require('./mysql');
+var traffic = require('./traffic');
 
 exports.signin = function(req, res){
+	  traffic.trafficupdate();
 	  res.render('signin', { title: 'ParkWiz' });
 };
 
@@ -42,7 +44,7 @@ exports.checksignin = function(req, res){
 						else{
 							req.session.userid = tempuserid;
 							console.log("Login Success");
-							res.send({"login":"Success"});
+							res.send({"results":tempuserid,"login":"Success"});
 						}
 					}, updateCount);
 					

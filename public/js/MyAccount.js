@@ -135,7 +135,7 @@ function activitygauge($scope) {
     $('#activity-gauge').highcharts(Highcharts.merge(gaugeOptions, {
         yAxis: {
             min: 0,
-            max: 50,
+            max: 200,
             title: {
                 text: 'Visits'
             }

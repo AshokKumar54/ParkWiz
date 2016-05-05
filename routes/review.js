@@ -57,7 +57,7 @@ exports.saveReview = function(req, res){
 					+ "',"
 					+ req.param("rating")
 					+ ","
-					+ req.session.userid
+					+ req.param("userid")
 					+ ","
 					+req.param("spotid")
 					+ ")";

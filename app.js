@@ -18,6 +18,9 @@ var express = require('express')
   , reservation = require('./routes/reservation')
   , image = require('./routes/image')
   , billing=require('./routes/billing')
+  , dashboard=require('./routes/dashboard')
+  , paymentmodule=require('./routes/payment')
+  , listing=require('./routes/listing')
   , path = require('path');
 
 var app = express();
@@ -41,6 +44,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+
 
 app.get('/', routes.index);
 app.get('/abc', routes.abc);
@@ -86,6 +91,20 @@ app.get('/availabilitychart',availability.availability);
 app.get('/loadavailabilitychart',availability.getAvailabilityChart);
 app.get('/gaugechart',gauge.gaugechart);
 app.get('/loadgaugechart',gauge.getGaugeChart);
+
+
+app.get('/google5dd28b475d00bead.html', function(req, res){
+	res.render('google5dd28b475d00bead');
+});
+
+app.get('/sitemap.xml', function(req, res){
+	res.render('sitemap');
+});
+
+app.get('/robots.txt', function(req, res){
+	res.type('text/plain');
+    res.send("User-agent: *\nDisallow: /");
+});
 
 app.get('/api/session',function(req,res){
 	
@@ -179,6 +198,57 @@ app.post('/api/loggedin_userinfo',function(req,res){
 app.get('/getAllImages',function(req,res){
     console.log("Inside app.js /getAllImages "+req.query.spotid);
     image.getAllImages(req,res);
+});
+
+
+//website traffic
+app.get('/api/getwebsitetraffic',function(req,res){
+    dashboard.websitetraffic(req, res);
+});
+
+//no of users
+app.get('/api/getnumberofusers',function(req,res){
+    dashboard.noofusers(req, res);
+});
+
+//total sales
+app.get('/api/gettotalsales',function(req,res){
+    dashboard.toalsales(req, res);
+});
+
+//get low review values
+app.get('/api/getlowreviewvalues',function(req,res){
+    dashboard.getlowreviewvalues(req, res);
+});
+
+//get high review values
+app.get('/api/gethighreviewvalues',function(req,res){
+    dashboard.gethighreviewvalues(req, res);
+});
+
+//get priority spots
+app.get('/api/getpriorityspots',function(req,res){
+    dashboard.getpriorityspots(req, res);
+});
+
+//get user listings
+app.get('/api/getuserlisting/:limit/:offset',function(req,res){
+    listing.getuserlisting(req, res, req.session.userid, req.params.limit, req.params.offset);
+});
+
+//get payment history
+app.get('/api/getpaymenthistory',function(req,res){
+	paymentmodule.getpaymenthistory(req, res, req.session.userid);
+});
+
+//update payment details
+app.get('/api/updatepaymenthistory/:paymentid/:name/:address/:card',function(req,res){
+	paymentmodule.updatepaymenthistory(req, res, req.params.paymentid, req.params.name, req.params.address, req.params.card);
+});
+
+//delete payment details
+app.delete('/api/deletepaymenthistory/:paymentid',function(req,res){
+	paymentmodule.deletepaymenthistory(req, res, req.params.paymentid);
 });
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -124,14 +124,16 @@
 				})
 						.success(
 								function(response) {
-									if (response.login == "Success")
-										window.location = '/';
-									else {
-
+									if (response.login!="Success"){
 										$('#error')
-												.append(
-														"<strong>Error!!!Invalid Login.Try again.</strong>");
+										.append(
+												"<strong>Error!!!Invalid Login.Try again.</strong>");
 										$('.alert').show();
+									}else {
+										sessionStorage.setItem("userid",response.results);
+									    //alert(sessionStorage.getItem("userid"));
+										window.location = '/';
+										
 									}
 								})
 						.error(
