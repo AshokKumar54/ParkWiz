@@ -1,47 +1,50 @@
 <h1>
 	<i class="fa fa-money"></i> Payment
 </h1>
-<div id="content">
-	<div class="row">
-		<div class="col-12" style="margin: 1%">
-			<div class="col-sm-3">Name</div>
-			<div class="col-sm-9">
-				<input value="Ashok Kumar Mishra" style="background-color: #fff"
-					class="form-control" placeholder="Enter your Name" type="text"
-					id="txtname">
+<div id="content" ng-controller="modulepayment">
+	<div ng-repeat="p in paymentinfo">
+		<div class="row">
+			<div class="col-12" style="margin: 1%">
+				<div class="col-sm-3">Name</div>
+				<div class="col-sm-9">
+					<input value="{{p.name}}" style="background-color: #fff"
+						class="form-control" placeholder="Enter your Name" type="text"
+						id="txtname">
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-12" style="margin: 1%">
-			<div class="col-sm-3">Address</div>
-			<div class="col-sm-9">
-				<input value="84 N 7th Street" style="background-color: #fff"
-					class="form-control" placeholder="Enter your Address" type="text"
-					id="txtpaymentaddress">
+		<div class="row">
+			<div class="col-12" style="margin: 1%">
+				<div class="col-sm-3">Address</div>
+				<div class="col-sm-9">
+					<input value="{{p.billingaddress}}" style="background-color: #fff"
+						class="form-control" placeholder="Enter your Address" type="text"
+						id="txtpaymentaddress">
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-12" style="margin: 1%">
-			<div class="col-sm-3">Card Number</div>
-			<div class="col-sm-9">
-				<input value="**** - **** - **** - 1284"
-					style="background-color: #fff" class="form-control"
-					placeholder="Enter your card number" type="text" id="txtcardnumber">
+		<div class="row">
+			<div class="col-12" style="margin: 1%">
+				<div class="col-sm-3">Card Number</div>
+				<div class="col-sm-9">
+					<input value="{{p.creditcard}}"
+						style="background-color: #fff" class="form-control"
+						placeholder="Enter your card number" type="text"
+						id="txtcardnumber">
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-12" style="margin: 1%">
-			<div class="col-sm-3"></div>
-			<div class="col-sm-9">
-				<div>
-					<a href="javascript:void(0)" class="btn btn-success"> <span
-						class="glyphicon glyphicon-edit"></span> Update
-					</a>&nbsp;&nbsp;<a href="javascript:void(0)" class="btn btn-success">
-						<span class="glyphicon glyphicon-trash"></span> Delete
-					</a>
+		<div class="row">
+			<div class="col-12" style="margin: 1%">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-9">
+					<div>
+						<a ng-click="updatepayment($event)" id="btnu-{{p.paymentid}}" href="javascript:void(0)" class="btn btn-success"> <span
+							class="glyphicon glyphicon-edit"></span> Update
+						</a>&nbsp;&nbsp;<a ng-click="deletepayment($event)" id="btnd-{{p.paymentid}}" href="javascript:void(0)" class="btn btn-success">
+							<span class="glyphicon glyphicon-trash"></span> Delete
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>

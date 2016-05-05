@@ -21,19 +21,19 @@ exports.getPrivateParking = function(req, res) {
 };
 
 exports.checkPaymentInfo = function(req,res){
-	var getPaymentInfo = "select * from payment where user_id="+req.query.userid;
+	var getPaymentInfo = "select * from payment where userid="+req.query.userid;
 	console.log("Query is:" + getPaymentInfo);
 	mysql.fetchData(function(err, result) {
 		if (err) {
 			console.log("Error while fetching parking details");
 			throw err;
 		} else {
-			if(result){
-				console.log("Payment Info is not present for this user");
-				res.send(false);
-			}else{
+			if(result.length > 0){
 				console.log("Payment Info is present for this user");
 				res.send(true);
+			}else{
+				console.log("Payment Info is not present for this user");
+				res.send(false);
 			}
 		}
 	}, getPaymentInfo);
@@ -52,4 +52,49 @@ exports.getSpotAvailability = function(req,res){
 		}
 	}, getSpotAvailability);
 };
-	
+
+
+exports.getSpotAvailability = function(req,res){
+	var getSpotAvailability = "select * from reservation where startdate=' "+req.query.searchdate+" 'and spotid="+req.query.spotid;
+	console.log("Query is:" + getSpotAvailability);
+	mysql.fetchData(function(err, result) {
+		if (err) {
+			console.log("Error while fetching parking details");
+			throw err;
+		} else {
+			console.log("result: "+result);
+			res.send(result);
+		}
+	}, getSpotAvailability);
+};
+
+
+exports.createReservation = function(req, res) {
+	var createReservation = "insert into reservation (`startdate`, `enddate`, `starttime`, `endtime`, `duration`, `userid`, `spotid` , `status`) VALUES ('"
+			+ req.query.startdate
+			+ "', '"
+			+ req.query.enddate
+			+ "', '"
+			+ req.query.starttime
+			+ "', '"
+			+ req.query.endtime
+			+ "', '"
+			+ req.query.duration
+			+ "', '"
+			+ req.query.userid
+			+ "', '"
+			+ req.query.spotid + "' , 'Booked')";
+	console.log("Query is:" + createReservation);
+	mysql.insertData(function(err, result) {
+		if (err) {
+			console.log("Error while creating reservation");
+			res.send({
+				"reservation" : "Not Done"
+			});
+		} else {
+			res.send({
+				"reservation" : "Done"
+			});
+		}
+	}, createReservation);
+};

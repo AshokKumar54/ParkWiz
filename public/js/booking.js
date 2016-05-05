@@ -12,16 +12,16 @@
 function BookingService($http) {
 	return {
 		getOverview : function() {
-			return $http.get('/api/bookingoverview');
+			return $http.get('/api/bookingoverview?userid=' + sessionStorage.getItem("userid"));//?spotid=' + spotid
 		},
 		getBookings: function() {
-			return $http.get('/api/mylisting');
+			return $http.get('/api/mylisting?userid=' + sessionStorage.getItem("userid"));
 		},
 		getSpaces : function() {
-			return $http.get('/api/getspaces');
+			return $http.get('/api/getspaces?userid=' + sessionStorage.getItem("userid"));
 		},
 		getcounts : function() {
-			return $http.get('/api/getcounts');
+			return $http.get('/api/getcounts?userid=' + sessionStorage.getItem("userid"));
 		}
 		/*
 		create : function(MyAccountData) {
