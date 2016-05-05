@@ -1896,7 +1896,6 @@ function validatePaymentInfo(userid, spotid) {
 							function(error) {
 								document.getElementById("reviewresult").innerHTML = "Adding review failed";
 							});
-=======
 			$scope.addlisting1 = function(){
 				var user_id = sessionStorage.getItem("userid");
 					$http({
@@ -1944,7 +1943,6 @@ function validatePaymentInfo(userid, spotid) {
 							function(error) {
 								document.getElementById("reviewresult").innerHTML = "Adding review failed";
 							});
-=======
 	            method: 'POST',
 	            url: '/addPayment',
 	            data: { "name": document.getElementById('cardname').value, "creditcard":document.getElementById('cardnum').value ,"address":document.getElementById('address').value,"cvv" : document.getElementById('cvv').value, "month":document.getElementById('month').value, "year" : document.getElementById('year').value, "user_id": user_id}
