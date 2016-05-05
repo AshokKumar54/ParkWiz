@@ -798,7 +798,8 @@ function validatePaymentInfo(userid, spotid) {
 			if (response) {
 				createReservation(userid,spotid);
 			} else {
-				$scope.$parent.changeview(1);
+				//$scope.$parent.changeview(1);
+				alert("Please add payment option.");
 			}
 		}).error(function(error) {
 			alert("error");
