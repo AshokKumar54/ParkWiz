@@ -12,7 +12,7 @@
 function BookingService($http) {
 	return {
 		getOverview : function() {
-			return $http.get('/api/bookingoverview');
+			return $http.get('/api/bookingoverview?userid=' + sessionStorage.getItem("userid"));//?spotid=' + spotid
 		},
 		getBookings: function() {
 			return $http.get('/api/mylisting');
