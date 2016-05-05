@@ -1850,7 +1850,7 @@ function googleTranslateElementInit() {
 	angular.module('myApp')
 			.controller('availabilitymodule', availabilitymodule);
 	function availabilitymodule($scope, $http) {
-		spotid = 2;
+		spotid = sessionStorage.getItem("spot_id");
 		var timeslot1 = [ {
 			'time' : '12:00',
 			'bgcolor' : ''

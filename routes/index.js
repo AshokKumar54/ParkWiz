@@ -13,6 +13,12 @@ exports.index = function(req, res) {
 	});
 };
 
+exports.video360 = function(req, res) {
+	res.render('video360', {
+		title : 'ParkWiz'
+	});
+};
+
 exports.abc = function(req, res) {
 	traffic.trafficupdate();
 	res.render('Carousel', {

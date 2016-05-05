@@ -65,6 +65,7 @@ app.get('/availability', routes.availability);
 app.get('/reviews', routes.reviews);
 
 app.get('/panaroma', routes.panaroma);
+app.get('/video360', routes.video360);
 app.get('/details', routes.details);
 app.get('/upload', routes.uploadimage);
 app.post('/upload', routes.upload);
