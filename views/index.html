@@ -562,6 +562,37 @@
 	var map;
 	var infowindow;
 	var locations;
+	
+	var legend_styles = '{'+
+    '"style": ['+
+        '{'+
+            '"name": "Destination",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker_yellow.png"'+
+        '},'+
+        '{'+
+            '"name": "Private Parking",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker_green.png"'+
+        '},'+
+        '{'+
+            '"name": "Public Parking",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker.png"'+
+        '}'+
+        ']'+
+'}'; 
+	var colstyle = JSON.parse(legend_styles);
+	styles = colstyle.style;
+	
+	function createLegend(){
+		var legend = document.getElementById('legend');
+		  for (var key in styles) {
+		    var name = styles[key].name;
+		    var icon = styles[key].icon;
+		    var div = document.createElement('div');
+		    div.innerHTML = '<img src="' + icon + '" height="15" width="10"> ' + name;
+		    legend.appendChild(div);
+		  }
+		}
+	
 	function initMap() {
 		var width = document.getElementById('mapContent').offsetWidth;
 		var height = document.getElementById('mapContent').offsetHeight;
@@ -575,6 +606,10 @@
 			},
 			zoom : 15
 		});
+		
+		map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+				  document.getElementById('legend'));
+		createLegend();
 	}
 	function callback(results, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
