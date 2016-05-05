@@ -118,7 +118,7 @@ function BookingService($http) {
 			if(data[0].icount > 0){
 				percomplete +=1;
 			}
-			debugger;
+			
 			$scope.percentage = Math.round((percomplete*100)/3);
 		});
 	}
@@ -129,4 +129,9 @@ function getAllBookings($scope, service){
 		.success(function(data) {
 			$scope.allbookings = data;
 		});
+
+	$scope.getDetails = function(ele ) {
+		
+		ele.$parent.detail(ele.booking.spotid);
+	}
 }

@@ -33,7 +33,7 @@ exports.getallbookings = function(userid, res) {
 	
 	//var getBooking = "SELECT CONCAT(s.addressline1, \" \", s.addressline2) AS address, r.status FROM spot s JOIN ( SELECT spotid, status, startdate from reservation where userid ='"+ userid + "') r WHERE s.spotid = r.spotid ORDER BY r.startdate DESC";
 
-	var getBooking = "SELECT DISTINCT CONCAT(s.addressline1, \" \", s.addressline2) AS address, r.status,i.imageurl, u.monthlypending, u.pendingtransfer, u.lifetimeearnings, u.lifetimetransactions FROM spot s JOIN image i ON i.spotid = s.spotid JOIN reservation r ON r.userid = s.userid JOIN user u ON u.userid = r.userid WHERE r.userid = "+ userid + " ORDER BY r.startdate DESC";
+	var getBooking = "SELECT DISTINCT CONCAT(s.addressline1, \" \", s.addressline2) AS address,s.spotid AS spotid, r.status,i.imageurl, u.monthlypending, u.pendingtransfer, u.lifetimeearnings, u.lifetimetransactions FROM spot s JOIN image i ON i.spotid = s.spotid JOIN reservation r ON r.userid = s.userid JOIN user u ON u.userid = r.userid WHERE r.userid = "+ userid + " ORDER BY r.startdate DESC";
 	console.log("Query is:" + getBooking);
 	
 	debugger;

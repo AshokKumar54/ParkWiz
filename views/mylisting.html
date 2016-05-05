@@ -9,6 +9,7 @@
 			<th style="text-align: center">Image</th>
 			<th style="text-align: center">Address</th>
 			<th style="text-align: center">Status</th>
+			<th style="text-align: center">Details</th>
 			<!--<th><div align="center">Action</div></th>-->
 		</tr>
 	</thead>
@@ -26,7 +27,15 @@
 				<div align="center" class="status status_active">
 					<span class="label label-success" ng-model="booking.status">{{
 						booking.status }}</span>
-				</div> <!--<div align="center" class="price">
+				</div> </td>
+			<td>
+				<div align="center" class="status status_active">
+					<span class="label label-success" style="cursor: pointer;" ng-model="booking.spotid" ng-click="getDetails(this);">Details</span>
+
+				</div>
+			</td>
+
+				<!--<div align="center" class="price">
 						<strong>Monthly Price:</strong> £10.00
 					</div></td>
 				<td><div class="button-outer" align="center">
