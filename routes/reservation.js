@@ -5,7 +5,13 @@ var mysql = require('./mysql');
 
 exports.getPrivateParking = function(req, res) {
 	//var getParking = "SELECT *, ( 3959 * acos( cos( radians(37.338208) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(37.338208) ) + sin( radians(-121.886329) ) * sin( radians( latitude ) ) ) ) AS distance FROM spot HAVING distance < 10 ORDER BY distance LIMIT 0 , 20";
-	var getParking = "SELECT *, ( 3959 * acos( cos( radians("+req.query.latitude+") ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians("+req.query.longitude+") ) + sin( radians("+req.query.latitude+") ) * sin( radians( latitude ) ) ) ) AS distance FROM spot HAVING distance < 3 ORDER BY distance LIMIT 0 , 20";
+	var getParking = "SELECT *, ( 3959 * acos( cos( radians("
+			+ req.query.latitude
+			+ ") ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians("
+			+ req.query.longitude
+			+ ") ) + sin( radians("
+			+ req.query.latitude
+			+ ") ) * sin( radians( latitude ) ) ) ) AS distance  , max(i.imageurl) AS Image FROM spot s JOIN image i ON s.spotid = i.spotid HAVING distance < 3 ORDER BY distance  LIMIT 0 , 20";
 	console.log("Query is:" + getParking);
 	
 	mysql.fetchData(function(err, result) {
