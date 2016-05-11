@@ -2,14 +2,23 @@ var mysql = require('./mysql');
 exports.addlistings = function(req, res){
 	//Hashing the entered password to store in the DB
 	console.log(req.body);
-	var insertReview = "insert into listing (user_id,location,parking,garage,description,noofspaces,daily,weekly,monthly,twentyfoursever,shelteredParking,securitygates,arrangedtransfer,allocatedGates,carwash,cctv,securityLighting,securityGuards,securityKey,undergroundPArking,restrooms,instructions) values ('"
-				    + req.param("user_id")
+
+	var insertReview = "insert into spot (userid,addressline1,city, state, zipcode, latitude, longitude, listingType,description,noofspaces,daily,weekly,monthly,twentyfoursever,shelteredParking,securitygates,arrangedtransfer,allocatedGates,carwash,cctv,securityLighting,securityGuards,securityKey,undergroundPArking,restrooms,instructions) values ('"
+				    + req.param("userid")
 					+ "','"
 				    + req.param("location")
 					+ "','"
-					+ req.param("radio1")
+					+ "Sunnyvale"
 					+ "','"
-					+ req.param("radio2")
+					+ "CA"
+					+ "','"
+					+ "94086"
+					+ "','"
+					+ "37.375182"
+					+ "','"
+					+ "-122.023006"
+					+ "','"
+					+ req.param("listingType")
 					+ "','"
 					+req.param("description")
 					+ "','"
@@ -58,4 +67,3 @@ exports.addlistings = function(req, res){
 				}
 			}, insertReview);
 };
-

@@ -176,8 +176,8 @@ app.get('/checkPaymentInfo',function(req,res){
 });
  
 app.get('/createReservation',function(req,res){
-    console.log("Inside app.js /createReservation "+req.query.searchtime);
-    //reservation.checkPaymentInfo(req,res);
+    console.log("Inside app.js /createReservation");
+    reservation.createReservation(req,res);
 });
 
 app.get('/api/getspaces',function(req,res){
@@ -242,13 +242,13 @@ app.get('/api/getpriorityspots',function(req,res){
 });
 
 //get user listings
-app.get('/api/getuserlisting/:limit/:offset',function(req,res){
-    listing.getuserlisting(req, res, req.session.userid, req.params.limit, req.params.offset);
+app.get('/api/getuserlisting/:limit/:offset/:userid',function(req,res){
+    listing.getuserlisting(req, res, req.params.userid, req.params.limit, req.params.offset);
 });
 
 //get payment history
-app.get('/api/getpaymenthistory',function(req,res){
-	paymentmodule.getpaymenthistory(req, res, req.session.userid);
+app.get('/api/getpaymenthistory/:userid',function(req,res){
+	paymentmodule.getpaymenthistory(req, res, req.params.userid);
 });
 
 //update payment details

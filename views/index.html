@@ -18,10 +18,14 @@
 
 
 <script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
-}
-</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	function googleTranslateElementInit() {
+		new google.translate.TranslateElement({
+			pageLanguage : 'en'
+		}, 'google_translate_element');
+	}
+</script>
+<script type="text/javascript"
+	src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 
 <!-- Bootstrap Core CSS -->
@@ -97,11 +101,11 @@ function googleTranslateElementInit() {
 </head>
 
 <body ng-controller="layoutmodule">
-	<div id="google_translate_element"></div>
 	<div id="wrapper">
 		<!-- Navigation -->
 		<nav class="navbar navbar-default navbar-static-top" role="navigation"
 			style="margin-bottom: 0; position: fixed; width: 100%;">
+			<div id="google_translate_element"></div>
 			<table id="navtable" width="100%">
 				<tr>
 					<td><div class="navbar-header" style="display: block;">
@@ -111,7 +115,7 @@ function googleTranslateElementInit() {
 								</button>
 								<div id="navMenus" class="dropdown-content" style="left: 0;">
 									<ul class="nav" id="side-menu">
-										<li><a class="aNav" href="/"><p align="center">
+										<li ng-click="loadreservation();"><a class="aNav"><p align="center">
 													<i class="fa fa fa-bookmark fa-fw menuSize"></i>
 												</p>
 												<p align="center">Reservation</p></a></li>
@@ -126,11 +130,6 @@ function googleTranslateElementInit() {
 													<i class="fa fa-money fa-fw menuSize"></i>
 												</p>
 												<p align="center">Billing</p></a></li>
-										<li ng-click="details();"><a class="aNav" href="#"><p
-													align="center">
-													<i class="fa fa-book fa-fw menuSize"></i>
-												</p>
-												<p align="center">Reviews</p></a></li>
 										<li ng-click="dashboard();"><a class="aNav" href="#"><p
 													align="center">
 													<i class="fa fa-bar-chart-o fa-fw menuSize"></i>
@@ -275,9 +274,6 @@ function googleTranslateElementInit() {
 											href="#"><i class="fa fa-calendar fa-fw"></i> Booking
 												History</a></li>
 										<li class="divider"></li>
-										<li><a href="#"><i class="fa fa-gear fa-fw"></i>
-												Settings</a></li>
-										<li class="divider"></li>
 										<li><a ng-click="logout()"><i
 												class="fa fa-sign-out fa-fw"></i> Logout</a></li>
 									</ul> <!-- /.dropdown-user --></li>
@@ -332,6 +328,11 @@ function googleTranslateElementInit() {
 				sessionStorage.removeItem("template");
 			}
 		}
+		
+		$scope.loadreservation=function(){
+			$scope.template = $scope.templates[0];
+			$("#navMenus").hide();
+		};
 
 		$scope.addlistings = function() {
 			$scope.template = $scope.templates[5];
@@ -436,6 +437,12 @@ function googleTranslateElementInit() {
 					.stringify($scope.templates[6]));
 			location.reload();
 		}
+		
+		$scope.changeview = function(val){
+			sessionStorage.setItem("latest_template", JSON
+					.stringify($scope.templates[val]));
+			location.reload();
+		}
 
 		//initialize();
 
@@ -472,7 +479,7 @@ function googleTranslateElementInit() {
 							htmlval += '<tr>';
 							htmlval += '<td style="width: 20%"><div align="center" class="image">';
 							htmlval += '<img style="width: 30%; height: 30%;"';
-							htmlval += 'src="https://static.yourparkingspace.co.uk/8963d0b7ecca07ef6fd89760ee6378e3.jpeg"';
+							htmlval += 'src="'+ privateparkingresult[i].imageurl+'"';
 							htmlval += 'alt="Parking on 84 N 7th Street, "></div></td>';
 							htmlval += '<td style="width: 60%"><div align="center">'
 									+ privateparkingresult[i].addressline1
@@ -496,17 +503,17 @@ function googleTranslateElementInit() {
 	}
 
 	function reserveParking(spotid) {
-		alert("Here" + spotid);
-		var userid = 1;
-		//console.log("... "+$scope.startdate);
-		//searchdata = {"startdate": $scope.startdate};
+		var confirmtxt = "Are you sure you want to proceed with payment?";
+		if(confirm(confirmtxt)){
+			var userid = sessionStorage.getItem("userid");
+		}
 		reserveParkingSpot(userid, spotid);
 	}
 
 	function getDetails(el, spotid) {
 		var $s = angular.element(el).scope();
 		//$scope.thing = newVal;
-		$s.$parent.detail(spotid);
+		$s.$parent.detail(spotid); 
 	}
 
 	angular.module('myApp').controller('profilemodule', profilemodule);
@@ -552,6 +559,37 @@ function googleTranslateElementInit() {
 	var map;
 	var infowindow;
 	var locations;
+	
+	var legend_styles = '{'+
+    '"style": ['+
+        '{'+
+            '"name": "Destination",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker_yellow.png"'+
+        '},'+
+        '{'+
+            '"name": "Private Parking",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker_green.png"'+
+        '},'+
+        '{'+
+            '"name": "Public Parking",'+
+            '"icon": "https://maps.gstatic.com/intl/en_us/mapfiles/marker.png"'+
+        '}'+
+        ']'+
+'}'; 
+	var colstyle = JSON.parse(legend_styles);
+	styles = colstyle.style;
+	
+	function createLegend(){
+		var legend = document.getElementById('legend');
+		  for (var key in styles) {
+		    var name = styles[key].name;
+		    var icon = styles[key].icon;
+		    var div = document.createElement('div');
+		    div.innerHTML = '<img src="' + icon + '" height="15" width="10"> ' + name;
+		    legend.appendChild(div);
+		  }
+		}
+	
 	function initMap() {
 		var width = document.getElementById('mapContent').offsetWidth;
 		var height = document.getElementById('mapContent').offsetHeight;
@@ -565,6 +603,10 @@ function googleTranslateElementInit() {
 			},
 			zoom : 15
 		});
+		
+		map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+				  document.getElementById('legend'));
+		createLegend();
 	}
 	function callback(results, status) {
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -743,7 +785,8 @@ function googleTranslateElementInit() {
 		validatePaymentInfo(userid, spotid);
 	}
 
-	function validatePaymentInfo(userid, spotid) {
+function validatePaymentInfo(userid, spotid) {
+		
 		$.ajax({
 			type : 'GET',
 			url : '/checkPaymentInfo',
@@ -753,29 +796,35 @@ function googleTranslateElementInit() {
 			}
 		}).success(function(response) {
 			if (response) {
-				createReservation();
+				createReservation(userid,spotid);
 			} else {
-				createReservation();
-				//location.href="/payment";		 
+				//$scope.$parent.changeview(1);
+				alert("Please add payment option.");
 			}
-			alert("success");
 		}).error(function(error) {
 			alert("error");
 		});
 	}
 
-	function createReservation() {
-		console.log("inside create reservation");
+	function createReservation(userid,spotid) {
+		var starttime = document.getElementById("starttime").options[document.getElementById("starttime").selectedIndex].value;
+		var endtime = document.getElementById("endtime").options[document.getElementById("endtime").selectedIndex].value;
+		var timeslots  = splitTimeByMinutes(starttime,endtime,60);
+		var duration = timeslots.length;
 		$.ajax({
 			type : 'GET',
 			url : '/createReservation',
 			data : {
 				"userid" : userid,
 				"spotid" : spotid,
-				"searchtime" : document.getElementById('#txtorigindate')
+				"startdate" : document.getElementById('txtorigindate').value,
+				"enddate" : document.getElementById('txtdestinationdate').value,
+				"starttime" : starttime,
+				"endtime" : endtime,
+				"duration" : duration
 			}
 		}).success(function(response) {
-			alert("success");
+			alert("Reservation Successful");
 		}).error(function(error) {
 			alert("error");
 		});
@@ -1656,7 +1705,7 @@ function googleTranslateElementInit() {
 		}
 
 		$scope.init = function() {
-			spotid = 3;
+			spotid = sessionStorage.getItem("spot_id");
 			$http({
 				method : 'GET',
 				url : '/getAllImages?spotid=' + spotid
@@ -1675,7 +1724,6 @@ function googleTranslateElementInit() {
 								+ $scope.activeimage);
 						console.log($scope.panaromaactiveimage.imageurl + "..."
 								+ $scope.panaromaimages);
-						alert("success");
 					}).error(function(error) {
 				alert(error);
 			});
@@ -1716,13 +1764,14 @@ function googleTranslateElementInit() {
 				name : '100'
 			} ]
 		};
-		
+
 		$scope.noofrecords = '10';
 
+		var userid = sessionStorage.getItem("userid");
 		// calling get user listing
 		$http({
 			method : 'GET',
-			url : '/api/getuserlisting/10/0',
+			url : '/api/getuserlisting/10/0/' + userid,
 			dataType : "json"
 		}).success(function(response) {
 			$scope.bookingInfos = response;
@@ -1730,36 +1779,40 @@ function googleTranslateElementInit() {
 		}).error(function(error) {
 			alert(error);
 		});
-		
-		$scope.getdataforgrid = function(){
-        	var records = $scope.noofrecords;
-        	var offset = 0;
-        	if($(event)[0].currentTarget.title == undefined || $(event)[0].currentTarget.title == ""){
-        		offset = (parseInt(curPage) - 1) * parseInt(records);
-        	}
-        	else{
-				offset = (parseInt($(event)[0].currentTarget.title) - 1) * parseInt(records);
+
+		$scope.getdataforgrid = function() {
+			var records = $scope.noofrecords;
+			var offset = 0;
+			if ($(event)[0].currentTarget.title == undefined
+					|| $(event)[0].currentTarget.title == "") {
+				offset = (parseInt(curPage) - 1) * parseInt(records);
+			} else {
+				offset = (parseInt($(event)[0].currentTarget.title) - 1)
+						* parseInt(records);
 			}
-        	var url = "/api/getuserlisting/"+records+"/" + offset;
-                $http({
-                    method: 'GET',
-                    url: url
-                }).success(function(response){
-                	$scope.bookingInfos = response;
-        			insertPaging(response[0].Totalrows, 1, $scope.noofrecords);
-                }).error(function(err){
-                    alert(err.value.message);
-           });
-        };
+			var url = "/api/getuserlisting/" + records + "/" + offset + "/"
+					+ userid;
+			$http({
+				method : 'GET',
+				url : url
+			}).success(function(response) {
+				$scope.bookingInfos = response;
+				insertPaging(response[0].Totalrows, 1, $scope.noofrecords);
+			}).error(function(err) {
+				alert(err.value.message);
+			});
+		};
 	}
 </script>
 <script>
 	angular.module('myApp').controller('modulepayment', modulepayment);
 	function modulepayment($scope, $http) {
+		
+		var userid = sessionStorage.getItem("userid");
 		// calling get user listing
 		$http({
 			method : 'GET',
-			url : '/api/getpaymenthistory',
+			url : '/api/getpaymenthistory/' + userid,
 			dataType : "json"
 		}).success(function(response) {
 			$scope.paymentinfo = response;
@@ -1769,11 +1822,15 @@ function googleTranslateElementInit() {
 
 		$scope.updatepayment = function(event) {
 			var id = event.target.id.split('-');
-			$http({
-				method : 'GET',
-				url : '/api/updatepaymenthistory/' + id[1] + '/' + $("#txtname").val() + '/' + $("#txtpaymentaddress").val() + '/' + $("#txtcardnumber").val(),
-				dataType : "json"
-			}).success(function(response) {
+			$http(
+					{
+						method : 'GET',
+						url : '/api/updatepaymenthistory/' + id[1] + '/'
+								+ $("#txtname").val() + '/'
+								+ $("#txtpaymentaddress").val() + '/'
+								+ $("#txtcardnumber").val(),
+						dataType : "json"
+					}).success(function(response) {
 				alert("Payment details updated successfully.");
 			}).error(function(error) {
 				alert(error);
@@ -1782,20 +1839,22 @@ function googleTranslateElementInit() {
 
 		$scope.deletepayment = function(event) {
 			var r = confirm("Are you sure you want to delete the payment details?");
-			if(r == true){
+			if (r == true) {
 				var id = event.target.id.split('-');
 				$http({
 					method : 'DELETE',
 					url : '/api/deletepaymenthistory/' + id[1],
 					dataType : "json"
-				}).success(function(response) {
-					alert("Payment details deleted successfully.");
-					var z = event.target.parentElement.parentElement.parentElement.parentElement;
-					z.parentElement.outerHTML = ""
-					
-				}).error(function(error) {
-					alert(error);
-				});
+				})
+						.success(
+								function(response) {
+									alert("Payment details deleted successfully.");
+									var z = event.target.parentElement.parentElement.parentElement.parentElement;
+									z.parentElement.outerHTML = ""
+
+								}).error(function(error) {
+							alert(error);
+						});
 			}
 		}
 	}
@@ -1804,16 +1863,23 @@ function googleTranslateElementInit() {
 	angular.module('myApp').controller('addListingController', addListingController);
 	function addListingController($scope, $http) {
 			$scope.addlisting1 = function(){
+				var listingType;
+				if (document.getElementById('radio-choice-1').checked) {
+					listingType = "Parking";
+				} else {
+					listingType = "Garage"
+				}
 				var user_id = sessionStorage.getItem("userid");
 					$http({
 			            method: 'POST',
 			            url: '/addlistings',
-			            data: { "user_id": user_id,"location": String(document.getElementById('txtLocation').value), "radio1":document.getElementById('radio-choice-1').checked ,"radio2":document.getElementById('radio-choice-2').checked,"description" : document.getElementById('description').value, "numberOfSpaces":document.getElementById('numberOfSpaces').value, "rental1" : document.getElementById('rental-radio-choice-1').checked, "rental2":document.getElementById('rental-radio-choice-2').checked, "rental3" :document.getElementById('rental-radio-choice-3').checked, "checkbox1":document.getElementById('checkbox-radio-choice-1').checked, "checkbox2" :document.getElementById('checkbox-radio-choice-2').checked, "checkbox3":document.getElementById('checkbox-radio-choice-3').checked, "checkbox4":document.getElementById('checkbox-radio-choice-4').checked, "checkbox5":document.getElementById('checkbox-radio-choice-5').checked,"checkbox6":document.getElementById('checkbox-radio-choice-6').checked,"checkbox7":document.getElementById('checkbox-radio-choice-7').checked,"checkbox8":document.getElementById('checkbox-radio-choice-8').checked,"checkbox9":document.getElementById('checkbox-radio-choice-9').checked,"checkbox10":document.getElementById('checkbox-radio-choice-10').checked,"checkbox11":document.getElementById('checkbox-radio-choice-11').checked,"checkbox12":document.getElementById('checkbox-radio-choice-12').checked, "instructions":document.getElementById('instructions').value, "image1":document.getElementById('image1').value,"image2":document.getElementById('image2').value,"image3":document.getElementById('image3').value }
+			            data: { "userid": user_id,"location": String(document.getElementById('txtLocation').value), "listingType": listingType,"description" : document.getElementById('description').value, "numberOfSpaces":document.getElementById('numberOfSpaces').value, "rental1" : document.getElementById('rental-radio-choice-1').checked, "rental2":document.getElementById('rental-radio-choice-2').checked, "rental3" :document.getElementById('rental-radio-choice-3').checked, "checkbox1":document.getElementById('checkbox-radio-choice-1').checked, "checkbox2" :document.getElementById('checkbox-radio-choice-2').checked, "checkbox3":document.getElementById('checkbox-radio-choice-3').checked, "checkbox4":document.getElementById('checkbox-radio-choice-4').checked, "checkbox5":document.getElementById('checkbox-radio-choice-5').checked,"checkbox6":document.getElementById('checkbox-radio-choice-6').checked,"checkbox7":document.getElementById('checkbox-radio-choice-7').checked,"checkbox8":document.getElementById('checkbox-radio-choice-8').checked,"checkbox9":document.getElementById('checkbox-radio-choice-9').checked,"checkbox10":document.getElementById('checkbox-radio-choice-10').checked,"checkbox11":document.getElementById('checkbox-radio-choice-11').checked,"checkbox12":document.getElementById('checkbox-radio-choice-12').checked, "instructions":document.getElementById('instructions').value, "image1":document.getElementById('image1').value,"image2":document.getElementById('image2').value }
 			         }).success(function(response){
 			        	 var resp= JSON.parse(JSON.stringify(response));
 				         console.log(resp);
+				         alert("listing added successfully.");
 				    }).error(function(error){
-				    	document.getElementById("reviewresult").innerHTML="Adding review failed";
+
 			        });
 
 
@@ -1925,7 +1991,7 @@ function googleTranslateElementInit() {
 			'time' : '23:00',
 			'bgcolor' : ''
 		} ];
-		
+
 		$scope.searchdate = [];
 		$scope.init = function() {
 			var today = new Date();
@@ -1947,229 +2013,258 @@ function googleTranslateElementInit() {
 						method : 'GET',
 						url : '/getSpotAvailability?spotid=' + spotid
 								+ '&searchdate=' + searchdate
-					}).success(
-					function(response) {
-						var timeslots1 = timeslot1.slice(0);
-						var timeslots2 = timeslot2.slice(0);
-						var timeslots3 = timeslot3.slice(0);
-						var timeslots4 = timeslot4.slice(0);
-						var timeslots5 = timeslot5.slice(0);
-						var timeslots6 = timeslot6.slice(0);
+					})
+					.success(
+							function(response) {
+								var timeslots1 = timeslot1.slice(0);
+								var timeslots2 = timeslot2.slice(0);
+								var timeslots3 = timeslot3.slice(0);
+								var timeslots4 = timeslot4.slice(0);
+								var timeslots5 = timeslot5.slice(0);
+								var timeslots6 = timeslot6.slice(0);
 
-						
-						for(var a=0; a<4; a++){
-							timeslots1[a].bgcolor = "";
-							timeslots2[a].bgcolor = "";
-							timeslots3[a].bgcolor = "";
-							timeslots4[a].bgcolor = "";
-							timeslots5[a].bgcolor = "";
-							timeslots6[a].bgcolor = "";
-						}
-						
-						var res = JSON.parse(JSON.stringify(response));
-						var splits = [];
-						if (res) {
-							var time = [];
-							for(var k =0; k<res.length; k++){
-								time.push.apply(time,splitTimeByMinutes(res[k].starttime,res[k].endtime, 60));
-							}
+								for (var a = 0; a < 4; a++) {
+									timeslots1[a].bgcolor = "";
+									timeslots2[a].bgcolor = "";
+									timeslots3[a].bgcolor = "";
+									timeslots4[a].bgcolor = "";
+									timeslots5[a].bgcolor = "";
+									timeslots6[a].bgcolor = "";
+								}
 
-							for (var j = 0; j < time.length; j++) {
-								var number = time[j].toString().split(':')[0];
-								if(number>=0 && number <=3){
-									for (var i=0; i<timeslots1.length; i++) {
-										  if ((timeslots1[i].time).toString().split(':')[0] == number) {
-											  timeslots1[i].bgcolor = "green";
-										  }
+								var res = JSON.parse(JSON.stringify(response));
+								var splits = [];
+								if (res) {
+									var time = [];
+									for (var k = 0; k < res.length; k++) {
+										time.push.apply(time,
+												splitTimeByMinutes(
+														res[k].starttime,
+														res[k].endtime, 60));
 									}
-								}else if(number >=4 && number <=7){
-									for (var i=0; i<timeslots2.length; i++) {
-										if ((timeslots2[i].time).toString().split(':')[0] == number) {
-											  timeslots2[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=8 && number <=11){
-									for (var i=0; i<timeslots3.length; i++) {
-										if ((timeslots3[i].time).toString().split(':')[0] == number) {
-											  timeslots3[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=12 && number <=15){
-									for (var i=0; i<timeslots4.length; i++) {
-										if ((timeslots4[i].time).toString().split(':')[0] == number) {
-											  timeslots4[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=16 && number <=19){
-									for (var i=0; i<timeslots5.length; i++) {
-										if ((timeslots5[i].time).toString().split(':')[0] == number) {
-											  timeslots5[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=20 && number <=23){
-									for (var i=0; i<timeslots6.length; i++) {
-										if ((timeslots6[i].time).toString().split(':')[0] == number) {
-											  timeslots6[i].bgcolor = "green";
-										  }
+
+									for (var j = 0; j < time.length; j++) {
+										var number = time[j].toString().split(
+												':')[0];
+										if (number >= 0 && number <= 3) {
+											for (var i = 0; i < timeslots1.length; i++) {
+												if ((timeslots1[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots1[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 4 && number <= 7) {
+											for (var i = 0; i < timeslots2.length; i++) {
+												if ((timeslots2[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots2[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 8 && number <= 11) {
+											for (var i = 0; i < timeslots3.length; i++) {
+												if ((timeslots3[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots3[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 12 && number <= 15) {
+											for (var i = 0; i < timeslots4.length; i++) {
+												if ((timeslots4[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots4[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 16 && number <= 19) {
+											for (var i = 0; i < timeslots5.length; i++) {
+												if ((timeslots5[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots5[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 20 && number <= 23) {
+											for (var i = 0; i < timeslots6.length; i++) {
+												if ((timeslots6[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots6[i].bgcolor = "green";
+												}
+											}
+										}
 									}
 								}
-							}
-						}
-						
-						$scope.timesplits1 = [];
-						$scope.timesplits1 = JSON.parse(JSON.stringify(timeslots1));
-						
-						$scope.timesplits2 = [];
-						$scope.timesplits2 = JSON.parse(JSON.stringify(timeslots2));
-						
-						$scope.timesplits3 = [];
-						$scope.timesplits3 = JSON.parse(JSON.stringify(timeslots3));
-						
-						$scope.timesplits4 = [];
-						$scope.timesplits4 = JSON.parse(JSON.stringify(timeslots4));
-						
-						$scope.timesplits5 = [];
-						$scope.timesplits5 = JSON.parse(JSON.stringify(timeslots5));
-						
-						$scope.timesplits6 = [];
-						$scope.timesplits6 = JSON.parse(JSON.stringify(timeslots6));
-						
-					}).error(function(error) {
-				alert(error);
-			});
+
+								$scope.timesplits1 = [];
+								$scope.timesplits1 = JSON.parse(JSON
+										.stringify(timeslots1));
+
+								$scope.timesplits2 = [];
+								$scope.timesplits2 = JSON.parse(JSON
+										.stringify(timeslots2));
+
+								$scope.timesplits3 = [];
+								$scope.timesplits3 = JSON.parse(JSON
+										.stringify(timeslots3));
+
+								$scope.timesplits4 = [];
+								$scope.timesplits4 = JSON.parse(JSON
+										.stringify(timeslots4));
+
+								$scope.timesplits5 = [];
+								$scope.timesplits5 = JSON.parse(JSON
+										.stringify(timeslots5));
+
+								$scope.timesplits6 = [];
+								$scope.timesplits6 = JSON.parse(JSON
+										.stringify(timeslots6));
+
+							}).error(function(error) {
+						alert(error);
+					});
 		};
-		
+
 		$scope.searchAvailableSlots = function() {
-			
-			var searchdate=document.getElementById('searchAvailabilityDate').value;
+
+			var searchdate = document.getElementById('searchAvailabilityDate').value;
 			$http(
 					{
 						method : 'GET',
 						url : '/getSpotAvailability?spotid=' + spotid
 								+ '&searchdate=' + searchdate
-					}).success(
-					function(response) {
-						$('.bgclass').css('background-color','#fff');
-						
-						var timeslots1 = timeslot1.slice(0);
-						var timeslots2 = timeslot2.slice(0);
-						var timeslots3 = timeslot3.slice(0);
-						var timeslots4 = timeslot4.slice(0);
-						var timeslots5 = timeslot5.slice(0);
-						var timeslots6 = timeslot6.slice(0);
+					})
+					.success(
+							function(response) {
+								$('.bgclass').css('background-color', '#fff');
 
-						for(var a=0; a<4; a++){
-							timeslots1[a].bgcolor = '';
-							timeslots2[a].bgcolor = '';
-							timeslots3[a].bgcolor = '';
-							timeslots4[a].bgcolor = '';
-							timeslots5[a].bgcolor = '';
-							timeslots6[a].bgcolor = '';
-						}
-						
-						var res = JSON.parse(JSON.stringify(response));
-						var splits = [];
-						if (res) {
-							var time = [];
-							for(var k =0; k<res.length; k++){
-								time.push.apply(time,splitTimeByMinutes(res[k].starttime,res[k].endtime, 60));
-							}
+								var timeslots1 = timeslot1.slice(0);
+								var timeslots2 = timeslot2.slice(0);
+								var timeslots3 = timeslot3.slice(0);
+								var timeslots4 = timeslot4.slice(0);
+								var timeslots5 = timeslot5.slice(0);
+								var timeslots6 = timeslot6.slice(0);
 
-							for (var j = 0; j < time.length; j++) {
-								var number = time[j].toString().split(':')[0];
-								if(number >=0 && number <=3){
-									for (var i=0; i<timeslots1.length; i++) {
-										  if ((timeslots1[i].time).toString().split(':')[0] == number) {
-											  timeslots1[i].bgcolor = "green";
-										  }
+								for (var a = 0; a < 4; a++) {
+									timeslots1[a].bgcolor = '';
+									timeslots2[a].bgcolor = '';
+									timeslots3[a].bgcolor = '';
+									timeslots4[a].bgcolor = '';
+									timeslots5[a].bgcolor = '';
+									timeslots6[a].bgcolor = '';
+								}
+
+								var res = JSON.parse(JSON.stringify(response));
+								var splits = [];
+								if (res) {
+									var time = [];
+									for (var k = 0; k < res.length; k++) {
+										time.push.apply(time,
+												splitTimeByMinutes(
+														res[k].starttime,
+														res[k].endtime, 60));
 									}
-								}else if(number >=4 && number <=7){
-									for (var i=0; i<timeslots2.length; i++) {
-										if ((timeslots2[i].time).toString().split(':')[0] == number) {
-											  timeslots2[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=8 && number <=11){
-									for (var i=0; i<timeslots3.length; i++) {
-										if ((timeslots3[i].time).toString().split(':')[0] == number) {
-											  timeslots3[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=12 && number <=15){
-									for (var i=0; i<timeslots4.length; i++) {
-										if ((timeslots4[i].time).toString().split(':')[0] == number) {
-											  timeslots4[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=16 && number <=19){
-									for (var i=0; i<timeslots5.length; i++) {
-										if ((timeslots5[i].time).toString().split(':')[0] == number) {
-											  timeslots5[i].bgcolor = "green";
-										  }
-									}
-								}else if(number >=20 && number <=23){
-									for (var i=0; i<timeslots6.length; i++) {
-										if ((timeslots6[i].time).toString().split(':')[0] == number) {
-											  timeslots6[i].bgcolor = "green";
-										  }
+
+									for (var j = 0; j < time.length; j++) {
+										var number = time[j].toString().split(
+												':')[0];
+										if (number >= 0 && number <= 3) {
+											for (var i = 0; i < timeslots1.length; i++) {
+												if ((timeslots1[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots1[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 4 && number <= 7) {
+											for (var i = 0; i < timeslots2.length; i++) {
+												if ((timeslots2[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots2[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 8 && number <= 11) {
+											for (var i = 0; i < timeslots3.length; i++) {
+												if ((timeslots3[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots3[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 12 && number <= 15) {
+											for (var i = 0; i < timeslots4.length; i++) {
+												if ((timeslots4[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots4[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 16 && number <= 19) {
+											for (var i = 0; i < timeslots5.length; i++) {
+												if ((timeslots5[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots5[i].bgcolor = "green";
+												}
+											}
+										} else if (number >= 20 && number <= 23) {
+											for (var i = 0; i < timeslots6.length; i++) {
+												if ((timeslots6[i].time)
+														.toString().split(':')[0] == number) {
+													timeslots6[i].bgcolor = "green";
+												}
+											}
+										}
 									}
 								}
-							}
-						}
-						
-						$scope.timesplits1 = JSON.parse(JSON.stringify(timeslots1));
-						
-						$scope.timesplits2 = [];
-						$scope.timesplits2 = JSON.parse(JSON.stringify(timeslots2));
-						
-						$scope.timesplits3 = [];
-						$scope.timesplits3 = JSON.parse(JSON.stringify(timeslots3));
-						
-						$scope.timesplits4 = [];
-						$scope.timesplits4 = JSON.parse(JSON.stringify(timeslots4));
-						
-						$scope.timesplits5 = [];
-						$scope.timesplits5 = JSON.parse(JSON.stringify(timeslots5));
-						
-						$scope.timesplits6 = [];
-						$scope.timesplits6 = JSON.parse(JSON.stringify(timeslots6));
-						
-					}).error(function(error) {
-				alert(error);
-			});
+
+								$scope.timesplits1 = JSON.parse(JSON
+										.stringify(timeslots1));
+
+								$scope.timesplits2 = [];
+								$scope.timesplits2 = JSON.parse(JSON
+										.stringify(timeslots2));
+
+								$scope.timesplits3 = [];
+								$scope.timesplits3 = JSON.parse(JSON
+										.stringify(timeslots3));
+
+								$scope.timesplits4 = [];
+								$scope.timesplits4 = JSON.parse(JSON
+										.stringify(timeslots4));
+
+								$scope.timesplits5 = [];
+								$scope.timesplits5 = JSON.parse(JSON
+										.stringify(timeslots5));
+
+								$scope.timesplits6 = [];
+								$scope.timesplits6 = JSON.parse(JSON
+										.stringify(timeslots6));
+
+							}).error(function(error) {
+						alert(error);
+					});
 		};
 	}
 </script>
 <script>
-	function splitTimeByMinutes(startTime, endTime, increment){
-		    startTime = startTime.toString().split(':');
-		    endTime = endTime.toString().split(':');
-		    increment = parseInt(increment, 10);
+	function splitTimeByMinutes(startTime, endTime, increment) {
+		startTime = startTime.toString().split(':');
+		endTime = endTime.toString().split(':');
+		increment = parseInt(increment, 10);
 
-		    var pad = function (n) { return (n < 10) ? '0' + n.toString() : n; },
-		        startHr = parseInt(startTime[0], 10),
-		        startMin = parseInt(startTime[1], 10),
-		        endHr = parseInt(endTime[0], 10),
-		        endMin = parseInt(endTime[1], 10),
-		        currentHr = startHr,
-		        currentMin = startMin,
-		        previous = currentHr + ':' + pad(currentMin),
-		        current = '',
-		        r = [];
+		var pad = function(n) {
+			return (n < 10) ? '0' + n.toString() : n;
+		}, startHr = parseInt(startTime[0], 10), startMin = parseInt(
+				startTime[1], 10), endHr = parseInt(endTime[0], 10), endMin = parseInt(
+				endTime[1], 10), currentHr = startHr, currentMin = startMin, previous = currentHr
+				+ ':' + pad(currentMin), current = '', r = [];
 
-		    do {
-		        currentMin += increment;
-		        if ((currentMin % 60) === 0 || currentMin > 60) {
-		            currentMin = (currentMin === 60) ? 0 : currentMin - 60;
-		            currentHr += 1;
-		        }
-		        current = currentHr + ':' + pad(currentMin);
-		        //r.push(previous + ' - ' + current);
-		        r.push(previous);
-		        previous = current;
-		  } while (currentHr !== endHr);
-			//alert(r);
-		    return r;
+		do {
+			currentMin += increment;
+			if ((currentMin % 60) === 0 || currentMin > 60) {
+				currentMin = (currentMin === 60) ? 0 : currentMin - 60;
+				currentHr += 1;
+			}
+			current = currentHr + ':' + pad(currentMin);
+			//r.push(previous + ' - ' + current);
+			r.push(previous);
+			previous = current;
+		} while (currentHr !== endHr);
+		//alert(r);
+		return r;
 	}
 </script>
 </html>
