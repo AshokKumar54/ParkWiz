@@ -104,7 +104,7 @@ app.get('/sitemap.xml', function(req, res){
 
 app.get('/robots.txt', function(req, res){
 	res.type('text/plain');
-    res.send("User-agent: *\nDisallow: /");
+    res.send("User-agent: *\nDisallow: ");
 });
 
 app.get('/api/session',function(req,res){
